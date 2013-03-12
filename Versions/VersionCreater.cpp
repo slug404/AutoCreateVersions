@@ -102,6 +102,10 @@ void VersionCreater::traveDomTree(const QString &str, const QStringList &filterF
             //Mind+这个名字在xml里面有问题, 特殊情况特殊处理
             if("Mind+.exe" == fileName)
             {
+                ///////////////////////////////////////////
+                //先存储记录文件名还有文件路径的map中
+                map_name_filePath_[fileName] = path;
+                ////////////////////////////////////////////
                 fileName = "Mind.exe";
             }
             else if("libstdc++-6.dll" == fileName)

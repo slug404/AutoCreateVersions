@@ -90,7 +90,8 @@ void VersionCreater::traveDomTree(const QString &str, const QStringList &filterF
     {
         foreach (QString fileName, dir.entryList())
         {
-            QString path = str + dir.separator() + fileName;
+            //QString path = str + dir.separator() + fileName;
+            QString path = str + "/" + fileName;
             QFile file(path);
             if(!file.open(QFile::ReadOnly))
             {
@@ -129,6 +130,10 @@ void VersionCreater::traveDomTree(const QString &str, const QStringList &filterF
                 continue;
             }
             else if("serialize.dat" == fileName)
+            {
+                continue;
+            }
+            else if ("libLog4Qt.dll" == fileName)
             {
                 continue;
             }
@@ -172,8 +177,8 @@ void VersionCreater::traveDomTree(const QString &str, const QStringList &filterF
         dir.setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
         foreach (QString dirName, dir.entryList())
         {
-            QString path = str + dir.separator() + dirName;
-
+            //QString path = str + dir.separator() + dirName;
+            QString path = str + "/" + dirName;
             bool bFilter = false;
 //            foreach (QString tmp, filterFolderPaths)
 //            {

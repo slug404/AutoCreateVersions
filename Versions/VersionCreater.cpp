@@ -121,6 +121,10 @@ void VersionCreater::traveDomTree(const QString &str, const QStringList &filterF
             {
                 continue;
             }
+            else if("setting.ini" == fileName)
+            {
+                continue;
+            }
 
             ///////////////////////////////////////////
             //先存储记录文件名还有文件路径的map中
@@ -167,31 +171,8 @@ void VersionCreater::traveDomTree(const QString &str, const QStringList &filterF
         dir.setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
         foreach (QString dirName, dir.entryList())
         {
-            //QString path = str + dir.separator() + dirName;
             QString path = str + "/" + dirName;
-            bool bFilter = false;
-//            foreach (QString tmp, filterFolderPaths)
-//            {
-//                if(path.contains(tmp))
-//                {
-//                    bFilter = true;
-//                    break;
-//                }
-//            }
-            if("tools" == dirName)
-            {
-                bFilter  = true;
-            }
-
-            if(bFilter)
-            {
-                qDebug() << "filter:" << path;
-            }
-            else
-            {
-                traveDomTree(path, filterFolderPaths);
-            }
-
+            traveDomTree(path, filterFolderPaths);
         }
     }
 }

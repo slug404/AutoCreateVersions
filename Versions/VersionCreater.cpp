@@ -100,24 +100,8 @@ void VersionCreater::traveDomTree(const QString &str, const QStringList &filterF
             }
             DPTR_D(VersionCreater);
             //QDomNode fileNameNode = d.pDocument_->createElement(fileName.left(fileName.indexOf(".")));
-            //Mind+这个名字在xml里面有问题, 特殊情况特殊处理
-            if("Mind+.exe" == fileName)
-            {
-                ///////////////////////////////////////////
-                //先存储记录文件名还有文件路径的map中
-                map_name_filePath_[fileName] = path;
-                ////////////////////////////////////////////
-                fileName = "Mind.exe";
-            }
-            else if("libstdc++-6.dll" == fileName)
-            {
-                continue;
-            }
-            else if("libgcc_s_dw2-1.dll" == fileName)
-            {
-                continue;
-            }
-            else if("AutoUpdateServer.exe" == fileName)
+
+            if("AutoUpdateServer.exe" == fileName)
             {
                 continue;
             }
@@ -143,26 +127,32 @@ void VersionCreater::traveDomTree(const QString &str, const QStringList &filterF
             map_name_filePath_[fileName] = path;
             ////////////////////////////////////////////
 
-            QDomNode fileNameNode = d.pDocument_->createElement(fileName.replace(".", "__"));
-            d.pFilesNode_->appendChild(fileNameNode);
+            QDomNode filesNode = d.pDocument_->createElement("file");
+            d.pFilesNode_->appendChild(filesNode);
+
+            //<name></name>
+            QDomNode fileNameNode = d.pDocument_->createElement("name");
+            QDomText fileNameText = d.pDocument_->createTextNode(fileName);
+            fileNameNode.appendChild(fileNameText);
+            filesNode.appendChild(fileNameNode);
 
             //<path></path>
             QDomNode filePathNode = d.pDocument_->createElement("path");
-            QDomText filePathText = d.pDocument_->createTextNode(path);
+            QDomText filePathText = d.pDocument_->createTextNode(QDir::toNativeSeparators(path));
             filePathNode.appendChild(filePathText);
-            fileNameNode.appendChild(filePathNode);
+            filesNode.appendChild(filePathNode);
 
             //<md5></md5>
             QDomNode fileMD5Node = d.pDocument_->createElement("md5");
             QDomText fileMD5Text = d.pDocument_->createTextNode(QCryptographicHash::hash(file.readAll(), QCryptographicHash::Md5).toHex());
             fileMD5Node.appendChild(fileMD5Text);
-            fileNameNode.appendChild(fileMD5Node);
+            filesNode.appendChild(fileMD5Node);
 
             //<lastModify></lastModify>
             QDomNode fileLastModifyNode = d.pDocument_->createElement("lastModify");
             QDomText fileLastModifyText = d.pDocument_->createTextNode(QFileInfo(path).lastModified().toString("yyyy-MM-dd,hh:mm"));
             fileLastModifyNode.appendChild(fileLastModifyText);
-            fileNameNode.appendChild(fileLastModifyNode);
+            filesNode.appendChild(fileLastModifyNode);
         }
     }
 

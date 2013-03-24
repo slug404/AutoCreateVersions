@@ -90,7 +90,6 @@ void VersionCreater::traveDomTree(const QString &str, const QStringList &filterF
     {
         foreach (QString fileName, dir.entryList())
         {
-            //QString path = str + dir.separator() + fileName;
             QString path = str + "/" + fileName;
             QFile file(path);
             if(!file.open(QFile::ReadOnly))
@@ -99,7 +98,6 @@ void VersionCreater::traveDomTree(const QString &str, const QStringList &filterF
                 continue;
             }
             DPTR_D(VersionCreater);
-            //QDomNode fileNameNode = d.pDocument_->createElement(fileName.left(fileName.indexOf(".")));
 
             if("AutoUpdateServer.exe" == fileName)
             {
@@ -142,7 +140,7 @@ void VersionCreater::traveDomTree(const QString &str, const QStringList &filterF
 
             //<path></path>
             QDomNode filePathNode = d.pDocument_->createElement("path");
-            QDomText filePathText = d.pDocument_->createTextNode(QDir::toNativeSeparators(path));
+            QDomText filePathText = d.pDocument_->createTextNode(path);
             filePathNode.appendChild(filePathText);
             filesNode.appendChild(filePathNode);
 

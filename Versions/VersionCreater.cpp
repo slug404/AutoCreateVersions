@@ -123,6 +123,10 @@ void VersionCreater::traveDomTree(const QString &str, const QStringList &filterF
             {
                 continue;
             }
+			else if("MindUpgrader.exe" == fileName)
+			{
+				continue;
+			}
 
             ///////////////////////////////////////////
             //先存储记录文件名还有文件路径的map中

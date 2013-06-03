@@ -123,6 +123,10 @@ void VersionCreater::traveDomTree(const QString &str, const QStringList &filterF
             {
                 continue;
             }
+			else if("MindUpgrader.exe" == fileName)
+			{
+				continue;
+			}
             else if("Thumbs.db" == fileName)
             {
                 continue;
@@ -138,7 +142,20 @@ void VersionCreater::traveDomTree(const QString &str, const QStringList &filterF
 
             ///////////////////////////////////////////
             //先存储记录文件名还有文件路径的map中
-            map_name_filePath_[fileName] = path;
+            {
+                QFile file(path);
+                QFileInfo fileInfor(file);
+
+                QDir dir(fileInfor.path());
+                if(dir.exists())
+                {
+                    map_name_filePath_[fileName] = fileInfor.path();
+                }
+                else
+                {
+                    qDebug() << "dir path not exists!";
+                }
+            }
             ////////////////////////////////////////////
 
             QDomNode filesNode = d.pDocument_->createElement("file");

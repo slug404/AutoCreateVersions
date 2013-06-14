@@ -19,7 +19,7 @@ public:
 protected:
     VersionCreater(VersionCreaterPrivate &data);
     virtual void initDomTree();
-    virtual void traveDomTree(const QString &str, const QStringList &filterFolderPaths);
+    virtual void traveDomTree(const QString &parentDirPath, const QStringList &filterFolderPaths);
     QString & getLocalIpAddress() const;
     QString getHostIp();
     bool isLinkLocalAddress(QHostAddress addr);

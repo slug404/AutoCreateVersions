@@ -12,6 +12,7 @@
 #include <QHostAddress>
 #include <QNetworkInterface>
 #include <QDataStream>
+#include <Filter.h>
 
 VersionCreater::VersionCreater()
     : VersionBase(*new VersionCreaterPrivate)
@@ -80,17 +81,17 @@ void VersionCreater::initDomTree()
     qDebug() << d.pIpAddressNode_->nodeName();
 }
 
-void VersionCreater::traveDomTree(const QString &str, const QStringList &filterFolderPaths)
+void VersionCreater::traveDomTree(const QString &parentDirPath, const QStringList &filterFolderPaths)
 {
     //好了明天的工作就是开始遍历数据, 然后生成xml
     //先处理files
-    QDir dir(str);
+    QDir dir(parentDirPath);
     dir.setFilter(QDir::Files);
     if(!dir.entryList().isEmpty())
     {
         foreach (QString fileName, dir.entryList())
         {
-            QString path = str + "/" + fileName;
+            QString path = parentDirPath + "/" + fileName;
             QFile file(path);
             if(!file.open(QFile::ReadOnly))
             {
@@ -99,43 +100,47 @@ void VersionCreater::traveDomTree(const QString &str, const QStringList &filterF
             }
             DPTR_D(VersionCreater);
 
-            if("AutoUpdateServer.exe" == fileName)
-            {
-                continue;
-            }
-            else if("AutoCreateVersions.exe" == fileName)
-            {
-                continue;
-            }
-            else if("server.xml" == fileName)
-            {
-                continue;
-            }
-            else if("serialize.dat" == fileName)
-            {
-                continue;
-            }
-            else if ("libLog4Qt.dll" == fileName)
-            {
-                continue;
-            }
-            else if("setting.ini" == fileName)
-            {
-                continue;
-            }
-			else if("MindUpgrader.exe" == fileName)
-			{
-				continue;
-			}
-            else if("Thumbs.db" == fileName)
-            {
-                continue;
-            }
-            else if(".DS_Store" == fileName)
-            {
-                continue;
-            }
-            else if("Buffer.mpb" == fileName)
+//            if("AutoUpdateServer.exe" == fileName)
+//            {
+//                continue;
+//            }
+//            else if("AutoCreateVersions.exe" == fileName)
+//            {
+//                continue;
+//            }
+//            else if("server.xml" == fileName)
+//            {
+//                continue;
+//            }
+//            else if("serialize.dat" == fileName)
+//            {
+//                continue;
+//            }
+//            else if ("libLog4Qt.dll" == fileName)
+//            {
+//                continue;
+//            }
+//            else if("setting.ini" == fileName)
+//            {
+//                continue;
+//            }
+//			else if("MindUpgrader.exe" == fileName)
+//			{
+//				continue;
+//			}
+//            else if("Thumbs.db" == fileName)
+//            {
+//                continue;
+//            }
+//            else if(".DS_Store" == fileName)
+//            {
+//                continue;
+//            }
+//            else if("Buffer.mpb" == fileName)
+//            {
+//                continue;
+//            }
+            if(Filter::isFilterFiles(path))
             {
                 continue;
             }
@@ -198,8 +203,21 @@ void VersionCreater::traveDomTree(const QString &str, const QStringList &filterF
         dir.setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
         foreach (QString dirName, dir.entryList())
         {
-            QString path = str + "/" + dirName;
-            traveDomTree(path, filterFolderPaths);
+            QString childDirPath = parentDirPath + "/" + dirName;
+            foreach (const QString &path, filterFolderPaths)
+            {
+                if(childDirPath.contains(path))
+                {
+                    return;
+                }
+            }
+
+            if(Filter::isFilterDir(childDirPath))
+            {
+                return;
+            }
+
+            traveDomTree(childDirPath, filterFolderPaths);
         }
     }
 }

@@ -7,6 +7,7 @@
  */
 class Filter
 {
+public:
     static bool isFilterDir(const QString dirPath);
     static bool isFilterFiles(const QString filePath);
 };

@@ -96,54 +96,106 @@ void VersionCreater::traveDomTree(const QString &parentDirPath, const QStringLis
             if(!file.open(QFile::ReadOnly))
             {
                 qDebug() << "can't open file:" << path;
+				file.close();
                 continue;
             }
             DPTR_D(VersionCreater);
 
-//            if("AutoUpdateServer.exe" == fileName)
-//            {
-//                continue;
-//            }
-//            else if("AutoCreateVersions.exe" == fileName)
-//            {
-//                continue;
-//            }
-//            else if("server.xml" == fileName)
-//            {
-//                continue;
-//            }
-//            else if("serialize.dat" == fileName)
-//            {
-//                continue;
-//            }
-//            else if ("libLog4Qt.dll" == fileName)
-//            {
-//                continue;
-//            }
-//            else if("setting.ini" == fileName)
-//            {
-//                continue;
-//            }
-//			else if("MindUpgrader.exe" == fileName)
-//			{
-//				continue;
-//			}
-//            else if("Thumbs.db" == fileName)
-//            {
-//                continue;
-//            }
-//            else if(".DS_Store" == fileName)
-//            {
-//                continue;
-//            }
-//            else if("Buffer.mpb" == fileName)
-//            {
-//                continue;
-//            }
-            if(Filter::isFilterFiles(path))
-            {
-                continue;
-            }
+			if(Filter::isFilterFiles(fileName))
+			{
+				qDebug() << "filter: " << fileName;
+				file.close();
+				continue;
+			}
+			else if("AutoUpdateServer.exe" == fileName)
+			{
+				continue;
+			}
+			else if("AutoCreateVersions.exe" == fileName)
+			{
+				continue;
+			}
+			else if("AutoCreateVersions" == fileName)
+			{
+				qDebug() << "filter: " << fileName;
+				file.close();
+				continue;
+			}
+			else if("AutoUpdateServer" == fileName)
+			{
+				qDebug() << "filter: " << fileName;
+				file.close();
+				continue;
+			}
+			else if("MindUpgrader.exe" == fileName)
+			{
+				qDebug() << "filter: " << fileName;
+				file.close();
+				continue;
+			}
+			else if("MindUpgrader" == fileName)
+			{
+				qDebug() << "filter: " << fileName;
+				file.close();
+				continue;
+			}
+			else if("server.xml" == fileName)
+			{
+				qDebug() << "filter: " << fileName;
+				file.close();
+				continue;
+			}
+			else if("serialize.dat" == fileName)
+			{
+				qDebug() << "filter: " << fileName;
+				file.close();
+				continue;
+			}
+			else if ("libLog4Qt.dll" == fileName)
+			{
+				qDebug() << "filter: " << fileName;
+				file.close();
+				continue;
+			}
+			else if("setting.ini" == fileName)
+			{
+				qDebug() << "filter: " << fileName;
+				file.close();
+				continue;
+			}
+			else if("Thumbs.db" == fileName)
+			{
+				qDebug() << "filter: " << fileName;
+				file.close();
+				continue;
+			}
+			else if(".DS_Store" == fileName)
+			{
+				qDebug() << "filter: " << fileName;
+				file.close();
+				continue;
+			}
+			else if("Buffer.mpb" == fileName)
+			{
+				qDebug() << "filter: " << fileName;
+				file.close();
+				continue;
+			}
+			else if("filter.ini" == fileName)
+			{
+				qDebug() << "filter: " << fileName;
+				file.close();
+				continue;
+			}
+			else if("filter.ini~" == fileName)
+			{
+				qDebug() << "filter: " << fileName;
+				file.close();
+				qDebug() << "filter: " << fileName;
+				file.close();
+				continue;
+			}
+
 
             ///////////////////////////////////////////
             //先存储记录文件名还有文件路径的map中

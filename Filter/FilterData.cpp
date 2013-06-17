@@ -19,11 +19,13 @@ void FilterData::setFilePath(const QString &filePath)
     {
         QString value = setting.value("files").toString();
         filterFiles_ = value.split(",").toSet();
+        qDebug() << "filter files:" << filterFiles_;
     }
 
     {
         QString value = setting.value("dirs").toString();
         filterDirs_ = value.split(",").toSet();
+        qDebug() << "filter dirs:" << filterDirs_;
     }
 }
 

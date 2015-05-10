@@ -12,7 +12,7 @@
 class Singleton
 {
 public:
-    static QSharedPointer<FilterData> &Instance(const QString &filePath);
+    static QSharedPointer<FilterData> &instance(const QString &filePath);
 
 private:
     Singleton();

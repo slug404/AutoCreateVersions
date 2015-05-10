@@ -1,8 +1,10 @@
 #ifndef VERSIONBASE_P_H
 #define VERSIONBASE_P_H
+
 #include "dptr.h"
 #include <QMap>
 #include <QPointer>
+
 class VersionBase;
 class QDomNode;
 class QString;

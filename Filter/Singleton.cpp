@@ -2,7 +2,7 @@
 
 QSharedPointer<FilterData> Singleton::pFilterData_;
 
-QSharedPointer<FilterData> &Singleton::Instance(const QString &filePath)
+QSharedPointer<FilterData> &Singleton::instance(const QString &filePath)
 {
     if(NULL == pFilterData_)
     {

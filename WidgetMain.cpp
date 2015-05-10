@@ -33,7 +33,6 @@ void WidgetMain::on_pushButtonOpenDir_clicked()
 {
 
     dirPath_ = QFileDialog::getExistingDirectory(this);
-    //dirPath_ = ".";
     lineEditSelect->setText(dirPath_);
 }
 

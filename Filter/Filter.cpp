@@ -4,7 +4,7 @@
 
 bool Filter::isFilterDir(const QString dirPath)
 {
-    QSharedPointer<FilterData> pFileData = Singleton::Instance("filter.ini");
+    QSharedPointer<FilterData> pFileData = Singleton::instance("filter.ini");
     //return pFileData->getFilterDirs().contains(dirPath);
     //没有处理子路径
     foreach (const QString &path, pFileData->getFilterDirs())
@@ -20,7 +20,7 @@ bool Filter::isFilterDir(const QString dirPath)
 
 bool Filter::isFilterFiles(const QString filePath)
 {
-    QSharedPointer<FilterData> pFileData = Singleton::Instance("filter.ini");
+    QSharedPointer<FilterData> pFileData = Singleton::instance("filter.ini");
     return pFileData->getFilterFiles().contains(filePath);
 }
 

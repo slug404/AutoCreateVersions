@@ -83,198 +83,101 @@ void VersionCreater::initDomTree()
 
 void VersionCreater::traveDomTree(const QString &parentDirPath, const QStringList &filterFolderPaths)
 {
-    //好了明天的工作就是开始遍历数据, 然后生成xml
-    //先处理files
     QDir dir(parentDirPath);
     dir.setFilter(QDir::Files);
-    if(!dir.entryList().isEmpty())
+
+    //先处理files
+    foreach (const QString &fileName, dir.entryList())
     {
-        foreach (QString fileName, dir.entryList())
+        QString path = parentDirPath + "/" + fileName;
+        QFile file(path);
+
+        if(!file.open(QFile::ReadOnly))
         {
-            QString path = parentDirPath + "/" + fileName;
-            QFile file(path);
-            if(!file.open(QFile::ReadOnly))
-            {
-                qDebug() << "can't open file:" << path;
-				file.close();
-                continue;
-            }
-            DPTR_D(VersionCreater);
-
-			if(Filter::isFilterFiles(fileName))
-			{
-				qDebug() << "filter: " << fileName;
-				file.close();
-				continue;
-			}
-			else if("AutoUpdateServer.exe" == fileName)
-			{
-				continue;
-			}
-			else if("AutoCreateVersions.exe" == fileName)
-			{
-				continue;
-			}
-			else if("AutoCreateVersions" == fileName)
-			{
-				qDebug() << "filter: " << fileName;
-				file.close();
-				continue;
-			}
-			else if("AutoUpdateServer" == fileName)
-			{
-				qDebug() << "filter: " << fileName;
-				file.close();
-				continue;
-			}
-			else if("MindUpgrader.exe" == fileName)
-			{
-				qDebug() << "filter: " << fileName;
-				file.close();
-				continue;
-			}
-			else if("MindUpgrader" == fileName)
-			{
-				qDebug() << "filter: " << fileName;
-				file.close();
-				continue;
-			}
-			else if("server.xml" == fileName)
-			{
-				qDebug() << "filter: " << fileName;
-				file.close();
-				continue;
-			}
-			else if("serialize.dat" == fileName)
-			{
-				qDebug() << "filter: " << fileName;
-				file.close();
-				continue;
-			}
-			else if ("libLog4Qt.dll" == fileName)
-			{
-				qDebug() << "filter: " << fileName;
-				file.close();
-				continue;
-			}
-			else if("setting.ini" == fileName)
-			{
-				qDebug() << "filter: " << fileName;
-				file.close();
-				continue;
-			}
-			else if("Thumbs.db" == fileName)
-			{
-				qDebug() << "filter: " << fileName;
-				file.close();
-				continue;
-			}
-			else if(".DS_Store" == fileName)
-			{
-				qDebug() << "filter: " << fileName;
-				file.close();
-				continue;
-			}
-			else if("Buffer.mpb" == fileName)
-			{
-				qDebug() << "filter: " << fileName;
-				file.close();
-				continue;
-			}
-			else if("filter.ini" == fileName)
-			{
-				qDebug() << "filter: " << fileName;
-				file.close();
-				continue;
-			}
-			else if("filter.ini~" == fileName)
-			{
-				qDebug() << "filter: " << fileName;
-				file.close();
-				qDebug() << "filter: " << fileName;
-				file.close();
-				continue;
-			}
-
-
-            ///////////////////////////////////////////
-            //先存储记录文件名还有文件路径的map中
-            {
-                QFile file(path);
-                QFileInfo fileInfor(file);
-
-                QDir dir(fileInfor.path());
-                if(dir.exists())
-                {
-                    map_name_filePath_[fileName] = fileInfor.path();
-                }
-                else
-                {
-                    qDebug() << "dir path not exists!";
-                }
-            }
-            ////////////////////////////////////////////
-
-            QDomNode filesNode = d.pDocument_->createElement("file");
-            d.pFilesNode_->appendChild(filesNode);
-
-            //<name></name>
-            QDomNode fileNameNode = d.pDocument_->createElement("name");
-            QDomText fileNameText = d.pDocument_->createTextNode(fileName);
-            fileNameNode.appendChild(fileNameText);
-            filesNode.appendChild(fileNameNode);
-
-            //<path></path>
-            QDomNode filePathNode = d.pDocument_->createElement("path");
-            QDomText filePathText = d.pDocument_->createTextNode(path);
-            filePathNode.appendChild(filePathText);
-            filesNode.appendChild(filePathNode);
-
-            //<md5></md5>
-            QDomNode fileMD5Node = d.pDocument_->createElement("md5");
-            QDomText fileMD5Text = d.pDocument_->createTextNode(QCryptographicHash::hash(file.readAll(), QCryptographicHash::Md5).toHex());
-            fileMD5Node.appendChild(fileMD5Text);
-            filesNode.appendChild(fileMD5Node);
-
-            //<lastModify></lastModify>
-            QDomNode fileLastModifyNode = d.pDocument_->createElement("lastModify");
-            QDomText fileLastModifyText = d.pDocument_->createTextNode(QFileInfo(path).lastModified().toString("yyyy-MM-dd,hh:mm"));
-            fileLastModifyNode.appendChild(fileLastModifyText);
-            filesNode.appendChild(fileLastModifyNode);
+            qDebug() << "can't open file:" << path;
+            file.close();
+            continue;
         }
-    }
 
-    dir.setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
-    if(dir.entryList().isEmpty())
-    {
-        return;
-    }
-    else
-    {
-        //然后继续遍历子目录
-        dir.setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
-        foreach (QString dirName, dir.entryList())
+        DPTR_D(VersionCreater);
+
+        if(Filter::isFilterFiles(fileName))
         {
-            QString childDirPath = parentDirPath + "/" + dirName;
-            foreach (const QString &path, filterFolderPaths)
-            {
-                if(childDirPath.contains(path))
-                {
-                    return;
-                }
-            }
+            qDebug() << "filter: " << fileName;
+            file.close();
+            continue;
+        }
 
-            if(Filter::isFilterDir(childDirPath))
+        ///////////////////////////////////////////
+        //先存储记录文件名还有文件路径的map中
+        {
+            QFile file(path);
+            QFileInfo fileInfor(file);
+
+            QDir dir(fileInfor.path());
+            if(dir.exists())
+            {
+                map_name_filePath_[fileName] = fileInfor.path();
+            }
+            else
+            {
+                qDebug() << "dir path not exists!";
+            }
+        }
+        ////////////////////////////////////////////
+
+        QDomNode filesNode = d.pDocument_->createElement("file");
+        d.pFilesNode_->appendChild(filesNode);
+
+        //<name></name>
+        QDomNode fileNameNode = d.pDocument_->createElement("name");
+        QDomText fileNameText = d.pDocument_->createTextNode(fileName);
+        fileNameNode.appendChild(fileNameText);
+        filesNode.appendChild(fileNameNode);
+
+        //<path></path>
+        QDomNode filePathNode = d.pDocument_->createElement("path");
+        QDomText filePathText = d.pDocument_->createTextNode(path);
+        filePathNode.appendChild(filePathText);
+        filesNode.appendChild(filePathNode);
+
+        //<md5></md5>
+        QDomNode fileMD5Node = d.pDocument_->createElement("md5");
+        QDomText fileMD5Text = d.pDocument_->createTextNode(QCryptographicHash::hash(file.readAll(), QCryptographicHash::Md5).toHex());
+        fileMD5Node.appendChild(fileMD5Text);
+        filesNode.appendChild(fileMD5Node);
+
+        //<lastModify></lastModify>
+        QDomNode fileLastModifyNode = d.pDocument_->createElement("lastModify");
+        QDomText fileLastModifyText = d.pDocument_->createTextNode(QFileInfo(path).lastModified().toString("yyyy-MM-dd,hh:mm"));
+        fileLastModifyNode.appendChild(fileLastModifyText);
+        filesNode.appendChild(fileLastModifyNode);
+    }
+
+    //再遍历子目录
+    dir.setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
+
+    foreach (const QString &dirName, dir.entryList())
+    {
+        QString childDirPath = parentDirPath + "/" + dirName;
+        foreach (const QString &path, filterFolderPaths)
+        {
+            if(childDirPath.contains(path))
             {
                 return;
             }
-
-            traveDomTree(childDirPath, filterFolderPaths);
         }
+
+        if(Filter::isFilterDir(childDirPath))
+        {
+            return;
+        }
+
+        traveDomTree(childDirPath, filterFolderPaths);
     }
 }
 
-QString &VersionCreater::getLocalIpAddress() const
+QString VersionCreater::getLocalIpAddress()
 {
     QString ipAddress = "";
 

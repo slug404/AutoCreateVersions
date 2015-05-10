@@ -10,7 +10,7 @@ class QHostAddress;
 
 class VersionCreater : public VersionBase
 {
-    DPTR_DECLARE_PRIVATE(VersionCreater);
+    DPTR_DECLARE_PRIVATE(VersionCreater)
 public:
     VersionCreater();
     virtual ~VersionCreater();
@@ -20,7 +20,7 @@ protected:
     VersionCreater(VersionCreaterPrivate &data);
     virtual void initDomTree();
     virtual void traveDomTree(const QString &parentDirPath, const QStringList &filterFolderPaths);
-    QString & getLocalIpAddress() const;
+    QString getLocalIpAddress();
     QString getHostIp();
     bool isLinkLocalAddress(QHostAddress addr);
     bool isLocalIp(QHostAddress addr);
